@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const exampleRoutes = require('./routes/exampleRoutes');
+const exampleRoutes = require('./src/routes/exampleRoutes');
+const elevatorRoutes = require('./src/routes/elevatorRoutes');
+const oauthRoutes = require('./src/routes/oauthRoutes');
 const path = require('path');
 const { Server } = require('socket.io');
 
@@ -16,17 +18,20 @@ const io = new Server(server);
 
 
 // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, 'not-found.html')));
-app.use(express.static(path.resolve(__dirname, '../simulation')));
+// app.use(express.static(path.resolve(__dirname, 'not-found.html')));
+app.use(express.static(path.resolve(__dirname, 'public')));
+app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 app.use('/', exampleRoutes);
+app.use('/elevator', elevatorRoutes);
+app.use('/oauth', oauthRoutes);
 
 app.get('/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'not-found.html'));
+    res.sendFile(path.resolve(__dirname, 'public', 'not-found.html'));
 });
 
 io.on('connection', (socket) => {
