@@ -77,11 +77,16 @@ const getTokenForSystem = (systemId) => {
 };
 
 const createButtons = (systems) => {
+    const metaDiv = document.getElementById('meta');
+    metaDiv.innerHTML = '<div style="color: green;">Login successful!!</div><div>Click to View Systems info</div>';
+
+    const continueDiv = document.getElementById('continue');
     const systemsDiv = document.getElementById('systems');
     const dataDiv = document.getElementById('data');
     systems.forEach(({ name, id, version }) => {
         const button = document.createElement('button');
         const cloudRelay = `https://${id}.relay.vmsproxy.com`;
+        button.className = "btn btn-secondary mt-3 mb-3";
         button.innerText = name;
         button.disabled = !version || parseInt(version[0]) < 5;
         button.onclick = async () => {
@@ -100,10 +105,22 @@ const createButtons = (systems) => {
                     resourceTree[serverId].cameras.push(`${name} - ${status || 'No status!!'}`);
                 }
             });
-            dataDiv.innerHTML = `<h2>Resources for ${name}</h2><pre>${JSON.stringify(resourceTree, undefined, 4)}</pre>`;
+            dataDiv.innerHTML = `<h4>Resources for ${name}</h4><div>Click to View Systems info</div><pre>${JSON.stringify(resourceTree, undefined, 4)}</pre>`;
         };
         systemsDiv.appendChild(button);
     });
+
+    document.getElementById('login').remove();
+    document.getElementById('login-btn').remove();
+
+    const continueButton = document.createElement('button');
+    continueButton.id = "continue";
+    continueButton.className = "btn btn-primary";
+    continueButton.innerText = "Continue";
+    continueButton.addEventListener('click', function() {
+        window.location.href = 'http://localhost:5000/system/home';
+      });
+    continueDiv.append(continueButton);
 };
 
 (async () => {

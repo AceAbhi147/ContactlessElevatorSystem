@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Simulator</title>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/addons/p5.sound.js"
+        integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+        integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="sketch.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        h1 {
+            margin-top: 50px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        h4 {
+            margin-bottom: 20px;
+        }
+
+        .full-width-component {
+            width: 200%;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+            align-items: center;
+            margin-left:-50%;
+        }
+
+        .sketch-component {
+            height:100%;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        .component {
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+
+        .flex-item {
+            flex: 1;
+        }
+
+        #elevator {
+            width: 1000px;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h2>Elevator System Management</h2>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#videos">Input Videos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#simulation">Elevator Simulator</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="videos" class="container tab-pane active"><br>
+                <h3>Home</h3>
+                <p>Welcome to the home tab content.</p>
+            </div>
+            <div id="simulation" class="container tab-pane fade"><br>
+                <div class="container">
+                    <h1 class="page-title border border-primary">Elevator Simulator</h1>
+                </div>
+                <div class="container-fluid full-width-component">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="component">
+                                <h4>Elevator Configurations</h4>
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td><label for="waiting" class="label">Waiting</label></td>
+                                            <td id="waiting" class='hud-text'></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="riding" class="label">Riding</label></td>
+                                            <td id="riding" class='hud-text'></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="served" class="label">Served</label></td>
+                                            <td id="served" class='hud-text'></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="numActiveCars" class="label">Active Cars</label></td>
+                                            <td><input id="numActiveCars" type="range" min="0" max="8" step="1"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="elevSpeed" class="label">Car Speed</label></td>
+                                            <td><input id="elevSpeed" type="range" min="1" max="10" step="1"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="projection" class="label">Projection</label></td>
+                                            <td id="projectionParent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="controlMode" class="label">Control Mode</label></td>
+                                            <td id="controlModeParent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="view" class="label">View</label></td>
+                                            <td id="viewParent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="passengerLoad" class="label">Load</label></td>
+                                            <td id="passengerLoadParent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="volume" class="label">Volume</label></td>
+                                            <td><input id="volume" type="range" min="0" max="10" step="1"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="speakers" class="label">Speakers</label></td>
+                                            <td id="speakersParent"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="component">
+                                <h4>Elevator</h4>
+                                <div id="elevator"></div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="component">
+                                <h4>Events</h4>
+                                <div id="event"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,4 +1,24 @@
-let sketch = function(p) {
+let socket;
+let request_recevied = false;
+let start = 0, end = 0;
+let totalFloors = 0;
+
+socket = io.connect('http://localhost:5000');
+socket.on('spawn', (data) => {
+    console.log("data", data);
+    start = data.start;
+    end = data.end;
+
+    // Validate inputs
+    if (start > 0 && start <= totalFloors && end !== start && end > 0 && end <= totalFloors) {
+        request_recevied = true;
+    } else {
+        console.log("Invalid request. Ignoring!! Start: " + start + " End: " + end);
+    }
+});
+
+
+let elevatorSketch = function(p) {
     const passengerLoadTypes =
         ['Varying', 'Very Light', 'Light', 'Moderate', 'Heavy', 'Very Heavy', 'Insane'];
 
@@ -46,14 +66,14 @@ let sketch = function(p) {
     let ready = false;
 
     p.preload = function() {
-        p.dingSound = p.loadSound('assets/ding.wav');
+        p.dingSound = p.loadSound('./assets/ding.wav');
     };
 
     p.setup = function() {
         const cg = settings.geom;
         setCanvasSize();
-        p.createCanvas(cg.canvas.x, cg.canvas.y, p.WEBGL).parent('main');
-        settings.numFloors = Math.floor(p.height / settings.geom.storyHeight);
+        p.createCanvas(cg.canvas.x, cg.canvas.y, p.WEBGL).parent('elevator');
+        totalFloors = settings.numFloors = Math.floor(p.height / settings.geom.storyHeight);
         stats = new Stats();
         controls = new Controls(p, settings, stats);
         talker = new Talker(settings);
@@ -69,8 +89,8 @@ let sketch = function(p) {
     };
 
     function setCanvasSize() {
-        const m = $('#main');
-        settings.geom.canvas = p.createVector(m.width() * 0.95, p.windowHeight * 0.92);  // todo Remove these magic numbers
+        const m = $('#elevator');
+        settings.geom.canvas = p.createVector(m.width() * 0.8, p.windowHeight * 0.8);
     }
 
     p.windowResized = function() {
@@ -83,6 +103,7 @@ let sketch = function(p) {
     };
 
     function manuallySummon() {
+
         if (settings.controlMode === 1 && p.mouseX >= 0 && p.mouseY >= 0) {
             const dist = car => Math.abs(car.carCenterX() - p.mouseX);
             const car = dispatcher.activeCars().reduce((a, b) => a && b ? dist(a) > dist(b) ? b : a : b, undefined);
@@ -123,25 +144,10 @@ let sketch = function(p) {
         const waitingRiders = dispatcher.riders.filter(r => r.state === RiderState.Waiting);
         const waitSecs = waitingRiders.reduce((accum, rider) => (now - rider.arrivalTime) + accum, 0);
         const wait = s.waiting ? ` (${l(Math.round(waitSecs))} secs)` : '';
-        const profit = s.payments - stats.costs.operating;
-        $('#score').html(l(Math.round(Math.max(0, profit / (p.millis() / 1000 / 60)))));
         $('#waiting').html(`${l(s.waiting)}${wait}`);
         const weight = s.riding ? ` (${l(s.ridingKg / 1000)} Mg)` : '';
         $('#riding').html(`${l(s.riding)}${weight}`);
         $('#served').html(l(s.served));
-        const curStyle = {style: 'currency', currency: 'usd'};
-        $('#payments').html(s.payments.toLocaleString('en-us', curStyle));
-        $('#costs').html(stats.costs.operating.toLocaleString('en-us', curStyle));
-        $('#profit').html((profit).toLocaleString('en-us', curStyle));
-        const g = controls.paymentsChart;
-        const yScale = g.height / stats.normalRideCost;
-        stats.recentRiderPayments.forEach((a, i) => {
-            const rideCost = a * yScale;
-            g.stroke('white');
-            g.line(i, 0, i, g.height);
-            g.stroke('gray');
-            g.line(i, g.height - rideCost, i, g.height);
-        });
     }
 
     function setUpCamera() {
@@ -296,11 +302,6 @@ class Controls {
         passengerLoad.changed(
             () => (settings.passengerLoad = passengerLoad.elt.selectedIndex)
         )
-
-        this.paymentsChart = p
-            .createGraphics(this.stats.maxRecentRiderPayments, 15)
-            .parent("#paymentsChart")
-        $("#paymentsChart canvas").show()
 
         const speakers = p.createSelect()
         ;["None", "All", "Native English"].forEach(p => speakers.option(p))
@@ -501,9 +502,8 @@ class Car {
             const dd = this.doorDims
             p.translate(0, 0, gc.z / 2 - dd.z)
             const doorTravel = gc.x / 4
-            const xDoorDisplacement = gc.x / 8 + doorTravel * this.doorOpenFraction
-
-            ;[1, -1].forEach(sign => {
+            const xDoorDisplacement = gc.x / 8 + doorTravel * this.doorOpenFraction;
+            [1, -1].forEach(sign => {
                 p.pushed(() => {
                     p.translate(sign * xDoorDisplacement, 0, 0)
                     p.box(dd.x, dd.y, dd.z)
@@ -708,7 +708,6 @@ class Dispatcher {
 
         if (this.settings.controlMode === 0 /* Auto */) {
             const request = this.carCallQueue.shift()
-
             if (request) {
                 const floorY = this.p.yFromFloor(request.floor)
                 const activeCars = this.activeCars()
@@ -767,25 +766,12 @@ class Dispatcher {
 
     possiblySpawnNewRider() {
         const p = this.p
-        const randomFloor = () =>
-            p.random(1) < 0.5 ? 1 : Math.floor(p.random(this.settings.numFloors) + 1)
-        const load = this.settings.passengerLoad
-        const desiredPerMin =
-            load === 0 // Varying
-                ? p.map(p.sin(p.millis() / 1e5), -1, 1, 10, 60)
-                : Math.pow(5, load - 1)
-        const desiredPerSec = desiredPerMin / 60
-        const spawnChance = Math.min(1, desiredPerSec / p.frameRate())
-
-        if (p.random(1) < spawnChance) {
-            const start = randomFloor()
-            let end = randomFloor()
-            while (start === end) {
-                end = randomFloor()
-            }
+        if (request_recevied) {
+            // console.log("Request: " + request_recevied, start, end);
             this.riders.push(
                 new Rider(p, this.settings, start, end, this, this.stats, this.talker)
-            )
+            );
+            request_recevied = !request_recevied;
         }
     }
 }
@@ -1173,5 +1159,29 @@ class Talker {
 }
 
 
+let eventSketch = function(p) {
 
-let myP5 = new p5(sketch);
+    p.setup = function() {
+        p.createCanvas(300, 200, p.WEBGL).parent('event');
+        p.background(250);
+        socket = io.connect('http://localhost:5000');
+        socket.on('spawn', (data={}) => {
+            // Validate inputs
+            if (start > 0 && start <= totalFloors && end !== start && end > 0 && end <= totalFloors) {
+                let str = "Request Received\n from floor No. " + start + " to floor No. " + end + "\n Dispatching elevator!"
+                p.textSize(16);
+                p.textAlign(p.CENTER);
+                p.text(str, p.width / 2, p.height / 2);
+            } else {
+                console.log("Invalid request. Ignoring!! Start: " + start + " End: " + end);
+            }
+
+            setTimeout(function () {
+                p.clear();
+            }, 5000);
+        });
+    }
+}
+
+let mainCanavas = new p5(elevatorSketch);
+let eventCanavas = new p5(eventSketch);

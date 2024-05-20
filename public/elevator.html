@@ -2,68 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elevator Simulator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/addons/p5.sound.js" integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="sketch.js"></script>
-    <style type="text/css">
-        body {
-            width: 100%;
-            font-family: sans-serif;
-        }
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="sketch.js"></script>
 
-        .label, .hud-text {
-            font-size: 70%;
-            color: black;
-            margin-right: 1em;
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        h1 {
+            margin-top: 50px;
+            margin-bottom: 50px;
+            text-align: center;
         }
-
-        #main {
-            width: 1000px;
+        h4 {
+            margin-bottom: 20px;
         }
-
-        .hud-text {
-            vertical-align: middle;
+        .component {
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
         }
-        input, select {
-            font-size: 70%;
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
         }
-        td {
-            vertical-align: top;
-        }
-        #paymentsChart {
-            height: 15px;
-        }
-        #nomodules {
-            display: none;
-        }
-        #controls {
-            background-color: rgba(255, 255, 255, 0.3);
+        .flex-item {
+            flex: 1;
         }
     </style>
 </head>
 <body>
-<body>
-<div id="nomodules">
-    <p>This application uses “ES Modules”, which apparently are not supported or enabled in your browser.</p>
-    <a href="https://jakearchibald.com/2017/es-modules-in-browsers/">More information</a>
+<div class="container">
+    <h1 class="page-title">Elevator Simulator</h1>
 </div>
-<script nomodule>
-    document.getElementById('nomodules').style.display = 'block';
-</script>
 <div class="container-fluid">
-    <p><b>Elevator Simulator</b>
-        <span style="font-size: 70%">By <a href="https://davebsoft.com">Dave Briccetti</a><a style="margin-left: 1em" href="https://github.com/dcbriccetti/elevator-sim">Source code</a><a style="margin-left: 1em" href="https://youtu.be/Ph4IhXUZy20">Code explanation video</a></span></p>
-    <div class='row'>
-        <div class='col-3'>
-            <div id='controls'>
-                <table>
-                    <tr>
-                        <td><label for="score" class="label">Score</label></td>
-                        <td id="score"></td>
-                    </tr>
+    <div class="row">
+        <div class="col-3">
+            <div class="component">
+                <h4>Elevator Configurations</h4>
+                <table class="table table-striped">
+                    <tbody>
                     <tr>
                         <td><label for="waiting" class="label">Waiting</label></td>
                         <td id="waiting" class='hud-text'></td>
@@ -75,21 +62,6 @@
                     <tr>
                         <td><label for="served" class="label">Served</label></td>
                         <td id="served" class='hud-text'></td>
-                    </tr>
-                    <tr>
-                        <td><label for="payments" class="label">Payments</label></td>
-                        <td id="payments" class='hud-text'></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" id="paymentsChart"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="costs" class="label">Costs</label></td>
-                        <td id="costs" class='hud-text'></td>
-                    </tr>
-                    <tr>
-                        <td><label for="profit" class="label">Profit</label></td>
-                        <td id="profit" class='hud-text'></td>
                     </tr>
                     <tr>
                         <td><label for="numActiveCars" class="label">Active Cars</label></td>
@@ -123,11 +95,24 @@
                         <td><label for="speakers" class="label">Speakers</label></td>
                         <td id="speakersParent"></td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
-        <div class='col' id='main'>Hellow</div>
+        <div class="col-6">
+            <div class="component">
+                <h4>Elevator</h4>
+                <div id="elevator"></div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="component">
+                <h4>Events</h4>
+                <div id="event"></div>
+            </div>
+        </div>
     </div>
 </div>
+
 </body>
 </html>

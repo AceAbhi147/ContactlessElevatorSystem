@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
-router.get('/login', async (req, res) => {
+router.get('/', async (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'oauth.html'));
 });
 
