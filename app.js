@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const exampleRoutes = require('./src/routes/exampleRoutes');
-const elevatorRoutes = require('./src/routes/elevatorRoutes');
+const systemRoutes = require('./src/routes/systemRoutes');
+const serverRoutes = require('./src/routes/serverRoutes');
 const oauthRoutes = require('./src/routes/oauthRoutes');
 const path = require('path');
 const { Server } = require('socket.io');
@@ -26,9 +26,10 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
-app.use('/', exampleRoutes);
-app.use('/elevator', elevatorRoutes);
-app.use('/oauth', oauthRoutes);
+app.use('/', systemRoutes);
+app.use('/home', oauthRoutes);
+app.use('/system', systemRoutes);
+
 
 app.get('/*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'not-found.html'));
