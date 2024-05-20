@@ -27,7 +27,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 app.use('/', systemRoutes);
-app.use('/home', oauthRoutes);
+app.use('/login', oauthRoutes);
 app.use('/system', systemRoutes);
 
 
