@@ -5,7 +5,6 @@ let totalFloors = 0;
 
 socket = io.connect('http://localhost:5000');
 socket.on('spawn', (data) => {
-    console.log("data", data);
     start = data.start;
     end = data.end;
 
@@ -30,7 +29,7 @@ let elevatorSketch = function(p) {
             doorMovementSecs: 0.4,
             doorOpenMs: 2500,
             maxRidersPerCar: 25,
-            numActiveCars: 0,
+            numActiveCars: 8,
             geom: {
                 scaleMetersTo3dUnits: 16,  // Some objects are defined with metric dimensions
                 car: car,
@@ -705,10 +704,10 @@ class Dispatcher {
 
     process() {
         this.processRiders()
-
-        if (this.settings.controlMode === 0 /* Auto */) {
+        if (this.settings.controlMode === 0) {
             const request = this.carCallQueue.shift()
             if (request) {
+                console.log("Requestion ", request);
                 const floorY = this.p.yFromFloor(request.floor)
                 const activeCars = this.activeCars()
                 const idleCars = activeCars.filter(
@@ -767,7 +766,7 @@ class Dispatcher {
     possiblySpawnNewRider() {
         const p = this.p
         if (request_recevied) {
-            // console.log("Request: " + request_recevied, start, end);
+            console.log("Request: " + request_recevied, start, end);
             this.riders.push(
                 new Rider(p, this.settings, start, end, this, this.stats, this.talker)
             );
@@ -1162,12 +1161,17 @@ class Talker {
 let eventSketch = function(p) {
 
     p.setup = function() {
-        p.createCanvas(300, 200, p.WEBGL).parent('event');
+        p.createCanvas(300, 200).parent('event');
         p.background(250);
         socket = io.connect('http://localhost:5000');
         socket.on('spawn', (data={}) => {
             // Validate inputs
             if (start > 0 && start <= totalFloors && end !== start && end > 0 && end <= totalFloors) {
+                p.fill(255, 255, 0);
+                p.noStroke();
+                p.rect(0, 0, 300, 200);
+
+                p.fill(0);
                 let str = "Request Received\n from floor No. " + start + " to floor No. " + end + "\n Dispatching elevator!"
                 p.textSize(16);
                 p.textAlign(p.CENTER);

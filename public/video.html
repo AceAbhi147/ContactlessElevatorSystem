@@ -1,75 +1,74 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-crossorigin="anonymous"></script>
-<video  id="video" controls></video>
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<video id="video"></video>
 
 <script>
-var username = 'local';
-var password = 'vymo2024';
-var cameraId = '4e9524ad-76a3-a4ca-4977-49a973ac563a';
-// var systemId = '2aff7685-2686-4347-970f-6a882e01a270';
-// var serverCloudAddress = "https://" + systemId + ".relay.vmsproxy.com";
-var serverLocalAddress = "http://127.0.0.1:7001";
-// var serverAddress = serverCloudAddress; // serverLocalAddress;
-var serverAddress = serverLocalAddress;
+    var username = 'local';
+    var password = 'vymo2024';
+    var cameraId = '4e9524ad-76a3-a4ca-4977-49a973ac563a';
+    // var systemId = '2aff7685-2686-4347-970f-6a882e01a270';
+    // var serverCloudAddress = "https://" + systemId + ".relay.vmsproxy.com";
+    var serverLocalAddress = "https://localhost:7001";
+    // var serverAddress = serverCloudAddress; // serverLocalAddress;
+    var serverAddress = serverLocalAddress;
 
-function step1GenerateKey() {
-
-    $.ajax({
-
-        url: serverAddress + "/api/getNonce",
-        type: "GET",
-        success: function(response) {
-            var realm = response.reply.realm;
-            var nonce = response.reply.nonce;
-            var digest = md5(username + ":" + realm + ":" + password);
-            var partial_ha2 = md5("GET" + ":");
-            var simplified_ha2 = md5(digest + ":" + nonce + ":" + partial_ha2);
-            var authKey = btoa(username + ":" + nonce + ":" + simplified_ha2);
-            step2GenerateVideoUrl(authKey); // This key can be used in URL now
-        }
-    });
-}
-
-function step2GenerateVideoUrl(authKey) {
-    var cameraURL = serverAddress + '/media/' + cameraId + '.webm?lo&auth=' + authKey;
-    console.log(cameraURL); // this URL can be tested with VLC player for verification. VLC should not ask for additional credentials
-    step3InitPlayer(cameraURL);
-}
-
-// function step3InitPlayer(cameraURL) {
-
-//     var video = document.getElementById('video');
-
-//     if (Hls.isSupported()) {
-
-//         var hls = new Hls();
-//         hls.loadSource(cameraURL);
-//         hls.attachMedia(video);
-//         hls.on(Hls.Events.MANIFEST_PARSED, function() {
-
-//             video.play();
-
-//         });
-//     }
-// }
-
-function step3InitPlayer(cameraURL) {    var video = document.getElementById('video');    if (video.canPlayType('video/webm')) {
-    // Set the video source to the WebM stream URL
-    video.src = cameraURL;    // Load and play the video
-    video.load();
-    video.play();    // Add event listeners for debugging purposes
-    video.addEventListener('loadeddata', function() {
-        console.log('Video data loaded');
-    });    video.addEventListener('error', function(e) {
-        console.error('Error occurred:', e);
-    });
-    } else {
-        console.error('WebM format is not supported in this browser.');
+    function getTotalNumberOfCameras(authKey) {
+        console.log("here")
+        $.ajax({
+            url: serverLocalAddress + "/rest/v3/devices?auth=" + authKey,
+            type: "GET",
+            success: function(devices) {
+                console.log(devices);
+                for (let device in devices) {
+                    console.log("Device Id: " + device.id + " Status: " + device.status);
+                }
+            }
+        })
     }
-}
 
-step1GenerateKey();
+    function step1GenerateKey() {
+        $.ajax({
+            url: serverAddress + "/api/getNonce",
+            type: "GET",
+            success: function (response) {
+                var realm = response.reply.realm;
+                var nonce = response.reply.nonce;
+                var digest = md5(username + ":" + realm + ":" + password);
+                var partial_ha2 = md5("GET" + ":");
+                var simplified_ha2 = md5(digest + ":" + nonce + ":" + partial_ha2);
+                var authKey = btoa(username + ":" + nonce + ":" + simplified_ha2);
+                step2GenerateVideoUrl(authKey); // This key can be used in URL now
+            }
+        });
+    }
+
+    function step2GenerateVideoUrl(authKey) {
+        getTotalNumberOfCameras(authKey);
+        console.log(serverLocalAddress + "/rest/v3/devices?auth=" + authKey);
+        var cameraURL = serverAddress + '/media/' + cameraId + '.webm?auth=' + authKey;
+        console.log(cameraURL); // this URL can be tested with VLC player for verification. VLC should not ask for additional credentials
+        step3InitPlayer(cameraURL);
+    }
+
+    function step3InitPlayer(cameraURL) {
+        var video = document.getElementById('video');
+        if (video.canPlayType('video/webm')) {
+            // Set the video source to the WebM stream URL
+            video.src = cameraURL;    // Load and play the video
+            video.load();
+            video.play();    // Add event listeners for debugging purposes
+            video.addEventListener('loadeddata', function () {
+                console.log('Video data loaded');
+            }); 
+            video.addEventListener('error', function (e) {
+                console.error('Error occurred:', e);
+            });
+        } else {
+            console.error('WebM format is not supported in this browser.');
+        }
+    }
+
+    step1GenerateKey();
 </script>

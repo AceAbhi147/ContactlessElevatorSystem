@@ -2,12 +2,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
-router.get('/', async (req, res) => {
+router.get('/video', async (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'video.html'));
-});
-
-router.get('/simulation', async (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'elevator.html'));
 });
 
 router.get('/sketch.js', async (req, res) => {

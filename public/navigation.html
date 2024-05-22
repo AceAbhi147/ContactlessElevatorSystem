@@ -21,6 +21,14 @@
         integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="sketch.js"></script>
+    <script>
+        function login() {
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src = "oauth.js";
+          document.getElementsByTagName("head")[0].appendChild(script);
+        }
+      </script>
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
