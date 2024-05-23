@@ -2,8 +2,9 @@ let socket;
 let request_recevied = false;
 let start = 0, end = 0;
 let totalFloors = 0;
+const origin = window.location.origin;
 
-socket = io.connect('http://localhost:5000');
+socket = io.connect(origin);
 socket.on('spawn', (data) => {
     start = data.start;
     end = data.end;
@@ -1163,7 +1164,7 @@ let eventSketch = function(p) {
     p.setup = function() {
         p.createCanvas(300, 200).parent('event');
         p.background(250);
-        socket = io.connect('http://localhost:5000');
+        socket = io.connect(origin);
         socket.on('spawn', (data={}) => {
             // Validate inputs
             if (start > 0 && start <= totalFloors && end !== start && end > 0 && end <= totalFloors) {

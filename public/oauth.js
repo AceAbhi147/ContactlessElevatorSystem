@@ -117,8 +117,9 @@ const createButtons = (systems) => {
     continueButton.id = "continue";
     continueButton.className = "btn btn-primary";
     continueButton.innerText = "Continue";
+    var origin = window.location.origin;
     continueButton.addEventListener('click', function() {
-        window.location.href = 'http://localhost:5000/system/home';
+        window.location.href = origin + '/system/home';
       });
     continueDiv.append(continueButton);
 };
