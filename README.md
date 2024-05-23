@@ -35,6 +35,8 @@ The project utilizes the following technologies to build and communicate with th
     3. Use ffmpeg to stream a video file (looping forever) to the server:
     ffmpeg -re -stream_loop -1 -i file_name_with_path -c copy -f rtsp rtsp://localhost:8554/debug
 
+## Gestures
+https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/03f5940d-fc25-48dd-ba07-79bc3c6af08e
 
 
 
