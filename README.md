@@ -20,6 +20,24 @@ The project utilizes the following technologies to build and communicate with th
 4. **Nx Tools**: Interaction with Nx media server and client.
 
 
+
+## Streaming a sample video
+
+    1. Create a configuration file for the RTSP server called rtsp-simple-server.yml:
+    protocols: [tcp]
+    paths:
+      all:
+        source: publisher
+
+    2. Start the RTSP server as a Docker container:
+    $ docker run --rm -it -v $PWD/rtsp-simple-server.yml:/rtsp-simple-server.yml -p 8554:8554 aler9/rtsp-simple-server:v1.3.0
+
+    3. Use ffmpeg to stream a video file (looping forever) to the server:
+    ffmpeg -re -stream_loop -1 -i file_name_with_path -c copy -f rtsp rtsp://localhost:8554/debug
+
+
+
+
 ## Deployment
 
 The project is available as a Docker image on Docker Hub:
