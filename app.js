@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const systemRoutes = require('./src/routes/systemRoutes');
 const serverRoutes = require('./src/routes/serverRoutes');
@@ -18,9 +17,9 @@ const server = require('http').createServer(app);
 const io = new Server(server);
 
 io.on('connection', (socket) => {
-    console.log("A user connected");
+    console.log("Socket.IO: A user connected");
     socket.on('disconnect', () => {
-        console.log('User Disconnected');
+        console.log('Socket.IO: User Disconnected');
     });
 });
 
@@ -29,10 +28,6 @@ io.on('connection', (socket) => {
 // app.use(express.static(path.resolve(__dirname, 'not-found.html')));
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(express.json());
-
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Error connecting to MongoDB:', err));
 
 app.use('/', serverRoutes);
 app.use('/login', oauthRoutes);
