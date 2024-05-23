@@ -39,9 +39,13 @@ You can also access the deployed project on Render:
 
 ## UI page
 ![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/fae2c2f0-6d6d-45b5-9ce1-feb5dba416a5)
+
 ![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/b32d9a53-ceb1-4887-a1c4-89a659b0b857)
+
 ![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/5702f0e5-9b11-4e4c-ad81-86f680e2ec14)
+
 ![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/17676c73-5f4d-4b69-9b4d-f168e582ba1c)
+
 
 ## Curl for request to the Elevator with source and destination floor numbers
 curl --location 'https://contactless-elevator.onrender.com/events/request' \
@@ -50,6 +54,7 @@ curl --location 'https://contactless-elevator.onrender.com/events/request' \
     "start": 1,
     "end": 7
 }'
+
 
 ## Demo
 [Demo](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/dfb56f83-6a35-4013-826a-96d331bdef23)
