@@ -30,7 +30,7 @@ The project utilizes the following technologies to build and communicate with th
         source: publisher
 
     2. Start the RTSP server as a Docker container:
-    $ docker run --rm -it -v $PWD/rtsp-simple-server.yml:/rtsp-simple-server.yml -p 8554:8554 aler9/rtsp-simple-server:v1.3.0
+    $ sudo docker run -d --rm -it -v $PWD/rtsp-simple-server.yml:/rtsp-simple-server.yml -p 8554:8554 aler9/rtsp-simple-server:v1.3.0
 
     3. Use ffmpeg to stream a video file (looping forever) to the server:
     ffmpeg -re -stream_loop -1 -i file_name_with_path -c copy -f rtsp rtsp://localhost:8554/debug
