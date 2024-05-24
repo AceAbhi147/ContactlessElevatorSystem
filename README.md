@@ -18,10 +18,15 @@ The project utilizes the following technologies to build and communicate with th
 2. **P5.js**: Creating interactive elevator simulations.
 3. **Socket.IO**: Communication and event triggering for elevator simulation.
 4. **Nx Tools**: Interaction with Nx media server and client.
+5. **Tensorflow & Mediapipe**: Hand gestures recognition model
 
 
+
+<br><br>
+# Getting started:
 
 ## Streaming a sample video
+The files required for this are present in **resources** folder. Just cd into that and run the 2nd and 3rd commands
 
     1. Create a configuration file for the RTSP server called rtsp-simple-server.yml:
     protocols: [tcp]
@@ -35,13 +40,25 @@ The project utilizes the following technologies to build and communicate with th
     3. Use ffmpeg to stream a video file (looping forever) to the server:
     ffmpeg -re -stream_loop -1 -i file_name_with_path -c copy -f rtsp rtsp://localhost:8554/debug
 
-## Gestures (NX AI Model ID: d05cc436-d74d-455f-b9ed-587fc4543a60)
+## Setup Nx Client and Mediaserver
+Follow this link: [Setting up Nx system](https://nx.docs.scailable.net/miscellaneous/hackathon-nx-evos-building-enterprise-scale-video-applications)
+
+## Instructions to run
+1. Make sure Nx mediaserver and client are installed with NX AI Plugin enabled
+2. Ensure rules created on stream to hit /events/request API with source and destination floor. See the curl below.
+3. Apply relevant model to your stream
+4. Run the contactless-elevation Node.js application using npm start or run it using docker.
+5. Navigate to localhost:5000/login and start from there.
+
+
+<br><br>
+# System Details
+
+## Gestures Model Details (NX AI Model ID: d05cc436-d74d-455f-b9ed-587fc4543a60)
+Used tensorflow & Google's mediapipe to create a hand gesture recongnition model. A demo for which is attached below.
 https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/03f5940d-fc25-48dd-ba07-79bc3c6af08e
 
-
-
 ## Deployment
-
 The project is available as a Docker image on Docker Hub:
 
 [Docker Image](https://hub.docker.com/r/aceabhi147/contactless-elevator)
@@ -56,9 +73,13 @@ You can also access the deployed project on Render:
 - **Node.js**: Uses Express.js to provide API routes.
 - **P5.js**: Handles the elevator simulation.
 - **Socket.IO**: Triggers elevator actions based on REST requests.
+- **Nx System**: Events triggers the elevators based on model detection
+
+
+<br><br>
+# UI & Demo
 
 ## UI pages
-
 Login Page
 ![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/fae2c2f0-6d6d-45b5-9ce1-feb5dba416a5)
 
@@ -93,10 +114,6 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 }'
 ```
 
-
-
-
-
 ## Demo with NX AI Integration
 [Demo with Nx AI Integration](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/49f56f9d-b5d4-4839-9256-fa13e9adc586)
 
@@ -107,7 +124,8 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 ## Known Issues
 
 1. **Authentication APIs**: The authentication APIs are not functioning correctly, resulting in the "Inputs Video" tab being non-functional.
-2. **NX AI Plugin Integration**: The intended use of NX AI Plugins for triggering elevator requests is not operational due to issues with the plugin installation in subsequent versions.
-3. **Media Server Dockerization**: The project aimed to dockerize the media server and integrate it into the contactless elevator system. However, the provided beta version couldn't be dockerized, and the NX plugin requires version >= 6.0. A new private version (6.0.0.38678) was provided, but cloud login issues persisted.
+2. **Media Server Dockerization**: The project aimed to dockerize the media server and integrate it into the contactless elevator system. However, the provided beta version couldn't be dockerized, and the NX plugin requires version >= 6.0. A new private version (6.0.0.38678) was provided, but cloud login issues persisted.
+3. Although the model was ready and deployed to Nx AI cloud, it wasn't working so decided to integrate elevator with existing models that were already present and working
+4. Post processing wasn't working properly to trigger the call to elevator system without configuring the rules.
 
 We appreciate any contributions and feedback to improve this project. Thank you for checking out the Elevator System Simulation Project!
