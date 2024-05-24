@@ -120,12 +120,14 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 ## Demo using curl commands
 [Demo using curl](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/dfb56f83-6a35-4013-826a-96d331bdef23)
 
-
-## Known Issues
+<br><br>
+# Known Issues
 
 1. **Authentication APIs**: The authentication APIs are not functioning correctly, resulting in the "Inputs Video" tab being non-functional.
 2. **Media Server Dockerization**: The project aimed to dockerize the media server and integrate it into the contactless elevator system. However, the provided beta version couldn't be dockerized, and the NX plugin requires version >= 6.0. A new private version (6.0.0.38678) was provided, but cloud login issues persisted.
 3. Although the model was ready and deployed to Nx AI cloud, it wasn't working so decided to integrate elevator with existing models that were already present and working
 4. Post processing wasn't working properly to trigger the call to elevator system without configuring the rules.
+5. Images deployed on render isn't complete as it couldn't communication with dockerise Nx mediaserver. Also, for consequtive deployments payment gateway had to be added.
 
+Will try to add additional changes to it!!
 We appreciate any contributions and feedback to improve this project. Thank you for checking out the Elevator System Simulation Project!
