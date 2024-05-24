@@ -68,12 +68,22 @@ You can also access the deployed project on Render:
 
 
 ## Curl for request to the Elevator with source and destination floor numbers
+```
 curl --location 'https://contactless-elevator.onrender.com/events/request' \
 --header 'Content-Type: application/json' \
 --data '{
     "start": 1,
     "end": 7
 }'
+```
+
+On local:
+```
+curl --location 'http://localhost:5000/events/request' --header 'Content-Type: application/json' --data '{
+    "start": 1,
+    "end": 7
+}'
+```
 
 
 ## Demo

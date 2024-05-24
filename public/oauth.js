@@ -86,7 +86,7 @@ const createButtons = (systems) => {
     systems.forEach(({ name, id, version }) => {
         const button = document.createElement('button');
         const cloudRelay = `https://${id}.relay.vmsproxy.com`;
-        button.className = "btn btn-secondary mt-3 mb-3";
+        button.className = "btn btn-secondary mt-3 mb-3 m-2";
         button.innerText = name;
         button.disabled = !version || parseInt(version[0]) < 5;
         button.onclick = async () => {
