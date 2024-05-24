@@ -57,14 +57,22 @@ You can also access the deployed project on Render:
 - **P5.js**: Handles the elevator simulation.
 - **Socket.IO**: Triggers elevator actions based on REST requests.
 
-## UI page
-![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/fae2c2f0-6d6d-45b5-9ce1-feb5dba416a5)
+## UI pages
 
-![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/b32d9a53-ceb1-4887-a1c4-89a659b0b857)
+Login Page
+![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/fae2c2f0-6d6d-45b5-9ce1-feb5dba416a5)
 
-![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/5702f0e5-9b11-4e4c-ad81-86f680e2ec14)
+Authentication using Nx
+![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/b32d9a53-ceb1-4887-a1c4-89a659b0b857)
 
-![image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/17676c73-5f4d-4b69-9b4d-f168e582ba1c)
+System details
+![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/5702f0e5-9b11-4e4c-ad81-86f680e2ec14)
+
+Video Streaming from Nx client using API
+![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/0f467336-5987-491f-a5cf-93cc74206cf6)
+
+Contactless elevator system
+![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/17676c73-5f4d-4b69-9b4d-f168e582ba1c)
 
 
 ## Curl for request to the Elevator with source and destination floor numbers
@@ -86,8 +94,14 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 ```
 
 
-## Demo
-[Demo](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/dfb56f83-6a35-4013-826a-96d331bdef23)
+
+
+
+## Demo with NX AI Integration
+[Demo with Nx AI Integration](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/49f56f9d-b5d4-4839-9256-fa13e9adc586)
+
+## Demo using curl commands
+[Demo using curl](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/dfb56f83-6a35-4013-826a-96d331bdef23)
 
 
 ## Known Issues
