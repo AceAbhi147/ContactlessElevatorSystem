@@ -65,9 +65,9 @@
         function step3InitPlayer(cameraURL, videoId) {
             var video = document.getElementById(videoId);
             if (video.canPlayType('video/webm')) {
-                video.src = cameraURL; 
+                video.src = cameraURL;
                 video.load();
-                video.play(); 
+                video.play();
                 video.addEventListener('loadeddata', function () {
                     console.log('Video data loaded');
                 });
@@ -130,6 +130,11 @@
             width: 1000px;
             align-items: center;
         }
+
+        video {
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -155,7 +160,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Ground floor | Video feed</h5>
-                                    <video id="video1" class="w-100"></video>
+                                    <video id="video1"></video>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +168,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Elevator 1 | Video Feed</h5>
-                                    <video id="video2" class="w-100"></video>
+                                    <video id="video2"></video>
                                 </div>
                             </div>
                         </div>
