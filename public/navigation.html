@@ -20,17 +20,68 @@
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
         integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
         crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
     <script type="text/javascript" src="sketch.js"></script>
     <script>
         function login() {
-          var script = document.createElement("script");
-          script.type = "text/javascript";
-          script.src = "oauth.js";
-          document.getElementsByTagName("head")[0].appendChild(script);
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "oauth.js";
+            document.getElementsByTagName("head")[0].appendChild(script);
         }
-      </script>
 
-    <!-- Bootstrap CSS -->
+        var username = 'local';
+        var password = 'vymo2024';
+        var camera2Id = '4e9524ad-76a3-a4ca-4977-49a973ac563a';
+        var cameraId = '4c0dd15e-8681-1504-fe6b-fcf7df00b10e';
+        var serverLocalAddress = "https://localhost:7001";
+        var serverAddress = serverLocalAddress;
+
+        function step1GenerateKey() {
+            $.ajax({
+                url: serverAddress + "/api/getNonce",
+                type: "GET",
+                success: function (response) {
+                    var realm = response.reply.realm;
+                    var nonce = response.reply.nonce;
+                    var digest = md5(username + ":" + realm + ":" + password);
+                    var partial_ha2 = md5("GET" + ":");
+                    var simplified_ha2 = md5(digest + ":" + nonce + ":" + partial_ha2);
+                    var authKey = btoa(username + ":" + nonce + ":" + simplified_ha2);
+                    step2GenerateVideoUrl(authKey); // This key can be used in URL now
+                }
+            });
+        }
+
+        function step2GenerateVideoUrl(authKey) {
+            console.log(serverLocalAddress + "/rest/v3/devices?auth=" + authKey);
+            var cameraURL = serverAddress + '/media/' + cameraId + '.webm?auth=' + authKey;
+            var camera2URL = serverAddress + '/media/' + camera2Id + '.webm?auth=' + authKey;
+            step3InitPlayer(cameraURL, "video1");
+            step3InitPlayer(camera2URL, "video2");
+        }
+
+        function step3InitPlayer(cameraURL, videoId) {
+            var video = document.getElementById(videoId);
+            if (video.canPlayType('video/webm')) {
+                video.src = cameraURL; 
+                video.load();
+                video.play(); 
+                video.addEventListener('loadeddata', function () {
+                    console.log('Video data loaded');
+                });
+                video.addEventListener('error', function (e) {
+                    console.error('Error occurred:', e);
+                });
+            } else {
+                console.error('WebM format is not supported in this browser.');
+            }
+        }
+
+        step1GenerateKey();
+    </script>
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         h1 {
@@ -48,11 +99,11 @@
             background-color: #f8f9fa;
             box-sizing: border-box;
             align-items: center;
-            margin-left:-50%;
+            margin-left: -50%;
         }
 
         .sketch-component {
-            height:100%;
+            height: 100%;
             box-sizing: border-box;
             align-items: center;
         }
@@ -98,7 +149,26 @@
         <div class="tab-content">
             <div id="videos" class="container tab-pane active"><br>
                 <h3>Home</h3>
-                <p>Welcome to the home tab content.</p>
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ground floor | Video feed</h5>
+                                    <video id="video1" class="w-100"></video>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Elevator 1 | Video Feed</h5>
+                                    <video id="video2" class="w-100"></video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="simulation" class="container tab-pane fade"><br>
                 <div class="container-fluid full-width-component">
