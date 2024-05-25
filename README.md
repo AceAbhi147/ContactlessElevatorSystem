@@ -58,6 +58,13 @@ Follow this link: [Setting up Nx system](https://nx.docs.scailable.net/miscellan
 Used tensorflow & Google's mediapipe to create a hand gesture recongnition model. A demo for which is attached below.
 https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/03f5940d-fc25-48dd-ba07-79bc3c6af08e
 
+## Nx-Postprocessor
+This system uses Nx postprocessor that creates a csv file that will be used for analytical purposes like 
+checking the most frequently visited floor or the source floor from where the passenger boards.
+The compiled file is present in **resources** folder and the source file itself is present in **nx-postprocessor** folder
+
+[Configure postprocessor](https://github.com/scailable/sclbl-integration-sdk#)
+
 ## Deployment
 The project is available as a Docker image on Docker Hub:
 
