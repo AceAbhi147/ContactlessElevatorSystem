@@ -58,6 +58,12 @@ Follow this link: [Setting up Nx system](https://nx.docs.scailable.net/miscellan
 Used tensorflow & Google's mediapipe to create a hand gesture recongnition model. A demo for which is attached below.
 https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/03f5940d-fc25-48dd-ba07-79bc3c6af08e
 
+Converted the Tensorflow model to ONNX model, which is added in **resources** folder. Wasn't able to add to NX AI Cloud as 
+at first glance it looked like, only RGB based models are supported. 
+
+Since NX didn't support this, I have integrated my own solution for **Contactless Elevator** and hope in future, the model can
+be added to NX AI Cloud.
+
 ## Nx-Postprocessor
 This system uses Nx postprocessor that creates a csv file that will be used for analytical purposes like 
 checking the most frequently visited floor or the source floor from where the passenger boards.
