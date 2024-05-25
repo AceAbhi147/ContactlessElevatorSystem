@@ -41,7 +41,7 @@ item_to_data = {
 # 12: //UINT32
 # 13: //UINT64
 
-csv_filepath = '/mnt/c/Abhishek/Nx/ContactlessElevatorSystem/resources/analytics.csv'
+csv_filepath = '/mnt/c/Abhishek/Nx/ContactlessElevatorSystem/public/analytics.csv'
 
 def main():
     # Start socket listener to receive messages from NXAI runtime
@@ -84,7 +84,7 @@ def create_CSV_File(input_object):
                 "Destination Floor": item_to_data[obj][1]
             })
 
-        print("Data created " + str(data))
+        print("Data saved to csv file at location: " + csv_filepath)
         try:
             file_exists = os.path.isfile(csv_filepath)
 
