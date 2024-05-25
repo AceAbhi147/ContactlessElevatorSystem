@@ -8,6 +8,7 @@ This project simulates an elevator system leveraging the features of Nx Systems 
 1. **User Authentication**: Ensures secure access to the elevator system.
 2. **Camera Streaming**: Streams video data from cameras on each floor and within each elevator car.
 3. **Gesture Control**: Uses custom machine learning models to enable gesture-based elevator requests.
+4. **Analytics using Nx-Postprocessor**: Show data such as most visited floor etc for analytics purpose.
 
 
 ## Tech Stack
@@ -16,9 +17,10 @@ The project utilizes the following technologies to build and communicate with th
 
 1. **Node.js**: Backend development.
 2. **P5.js**: Creating interactive elevator simulations.
-3. **Socket.IO**: Communication and event triggering for elevator simulation.
-4. **Nx Tools**: Interaction with Nx media server and client.
-5. **Tensorflow & Mediapipe**: Hand gestures recognition model
+3. **Chart.js**: Used for showing analytics data.
+4. **Socket.IO**: Communication and event triggering for elevator simulation.
+5. **Nx Tools**: Interaction with Nx media server and client.
+6. **Tensorflow & Mediapipe**: Hand gestures recognition model.
 
 
 
@@ -67,6 +69,8 @@ be added to NX AI Cloud.
 ## Nx-Postprocessor
 This system uses Nx postprocessor that creates a csv file that will be used for analytical purposes like 
 checking the most frequently visited floor or the source floor from where the passenger boards.
+Mediaserver, via postprocessor, saves the csv file in the **public** folder so as to show them in analytics page.
+The path to save the .csv is explicitly specified. So, make sure the change it and follow the process to apply postprocessor. Link provided below.
 The compiled file is present in **resources** folder and the source file itself is present in **nx-postprocessor** folder
 
 [Configure postprocessor](https://github.com/scailable/sclbl-integration-sdk#)
@@ -137,10 +141,14 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 # Known Issues
 
 1. **Authentication APIs**: The authentication APIs are not functioning correctly, resulting in the "Inputs Video" tab being non-functional.
-2. **Media Server Dockerization**: The project aimed to dockerize the media server and integrate it into the contactless elevator system. However, the provided beta version couldn't be dockerized, and the NX plugin requires version >= 6.0. A new private version (6.0.0.38678) was provided, but cloud login issues persisted.
-3. Although the model was ready and deployed to Nx AI cloud, it wasn't working so decided to integrate elevator with existing models that were already present and working
-4. Post processing wasn't working properly to trigger the call to elevator system without configuring the rules.
-5. Images deployed on render isn't complete as it couldn't communication with dockerise Nx mediaserver. Also, for consequtive deployments payment gateway had to be added.
+2. **Media Server Dockerization**: The project aimed to dockerize the media server and integrate it into the contactless elevator system. 
+                                   However, the provided beta version couldn't be dockerized, and the NX plugin requires version >= 6.0. 
+                                   A new private version (6.0.0.38678) was provided, but cloud login issues persisted.
+3. **Nx AI Cloud**: Although the model was ready and converted on ONNX format (which is attached in the **resource** folder as well), Nx supports only those model that utilises RGB. 
+                    Since our model is based on coordinates, it wasn't supported by Nx AI Cloud. Hence decided to use our code for custom integration to elevator system
+4. **Post-Processor**: Explicitly adding path to generate and save csv data which is being used to show analytics.
+5. **Docker Images & Deployment**: Application deployed on render isn't complete as it couldn't communication with dockerise Nx mediaserver. 
+                                   Also, for consequtive deployments payment gateway had to be added so skipped it.
 
 Will try to add additional changes to it!!
 We appreciate any contributions and feedback to improve this project. Thank you for checking out the Elevator System Simulation Project!
