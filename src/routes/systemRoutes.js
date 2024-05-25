@@ -22,4 +22,12 @@ router.get('/elevator.html', async (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'elevator.html'));
 });
 
+router.get('/analytics.js', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'analytics.js'));
+});
+
+router.get('/analytics.csv', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'analytics.csv'));
+});
+
 module.exports = router;

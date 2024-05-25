@@ -1,387 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Elevator Simulator</title>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/addons/p5.sound.js"
-      integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script
-      src="https://cdn.socket.io/4.7.5/socket.io.min.js"
-      integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"
-    ></script>
-    <script type="text/javascript" src="sketch.js"></script>
-    <script>
-      function login() {
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = "oauth.js";
-        document.getElementsByTagName("head")[0].appendChild(script);
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elevator Simulator</title>
 
-      var username = "local";
-      var password = "vymo2024";
-      var camera2Id = "4e9524ad-76a3-a4ca-4977-49a973ac563a";
-      var cameraId = "96610278-32b5-bbd7-65e3-b83ab9d0a656";
-      var serverLocalAddress = "https://localhost:7001";
-      var serverAddress = serverLocalAddress;
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/addons/p5.sound.js"
+    integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+    integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="analytics.js"></script>
+  <script type="text/javascript" src="sketch.js"></script>
+  <script>
+    function login() {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "oauth.js";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    }
 
-      function step1GenerateKey() {
-        $.ajax({
-          url: serverAddress + "/api/getNonce",
-          type: "GET",
-          success: function (response) {
-            var realm = response.reply.realm;
-            var nonce = response.reply.nonce;
-            var digest = md5(username + ":" + realm + ":" + password);
-            var partial_ha2 = md5("GET" + ":");
-            var simplified_ha2 = md5(digest + ":" + nonce + ":" + partial_ha2);
-            var authKey = btoa(username + ":" + nonce + ":" + simplified_ha2);
-            step2GenerateVideoUrl(authKey); // This key can be used in URL now
-          },
+    var username = "local";
+    var password = "vymo2024";
+    var camera2Id = "4e9524ad-76a3-a4ca-4977-49a973ac563a";
+    var cameraId = "96610278-32b5-bbd7-65e3-b83ab9d0a656";
+    var serverLocalAddress = "https://localhost:7001";
+    var serverAddress = serverLocalAddress;
+
+    function step1GenerateKey() {
+      $.ajax({
+        url: serverAddress + "/api/getNonce",
+        type: "GET",
+        success: function (response) {
+          var realm = response.reply.realm;
+          var nonce = response.reply.nonce;
+          var digest = md5(username + ":" + realm + ":" + password);
+          var partial_ha2 = md5("GET" + ":");
+          var simplified_ha2 = md5(digest + ":" + nonce + ":" + partial_ha2);
+          var authKey = btoa(username + ":" + nonce + ":" + simplified_ha2);
+          step2GenerateVideoUrl(authKey); // This key can be used in URL now
+        },
+      });
+    }
+
+    function step2GenerateVideoUrl(authKey) {
+      console.log(serverLocalAddress + "/rest/v3/devices?auth=" + authKey);
+      var cameraURL =
+        serverAddress + "/media/" + cameraId + ".webm?auth=" + authKey;
+      var camera2URL =
+        serverAddress + "/media/" + camera2Id + ".webm?auth=" + authKey;
+      step3InitPlayer(cameraURL, "video1");
+      step3InitPlayer(camera2URL, "video2");
+    }
+
+    function step3InitPlayer(cameraURL, videoId) {
+      var video = document.getElementById(videoId);
+      if (video.canPlayType("video/webm")) {
+        video.src = cameraURL;
+        video.load();
+        video.play();
+        video.addEventListener("loadeddata", function () {
+          console.log("Video data loaded");
         });
+        video.addEventListener("error", function (e) {
+          console.error("Error occurred:", e);
+        });
+      } else {
+        console.error("WebM format is not supported in this browser.");
       }
+    }
 
-      function step2GenerateVideoUrl(authKey) {
-        console.log(serverLocalAddress + "/rest/v3/devices?auth=" + authKey);
-        var cameraURL =
-          serverAddress + "/media/" + cameraId + ".webm?auth=" + authKey;
-        var camera2URL =
-          serverAddress + "/media/" + camera2Id + ".webm?auth=" + authKey;
-        step3InitPlayer(cameraURL, "video1");
-        step3InitPlayer(camera2URL, "video2");
-      }
+    step1GenerateKey();
+  </script>
 
-      function step3InitPlayer(cameraURL, videoId) {
-        var video = document.getElementById(videoId);
-        if (video.canPlayType("video/webm")) {
-          video.src = cameraURL;
-          video.load();
-          video.play();
-          video.addEventListener("loadeddata", function () {
-            console.log("Video data loaded");
-          });
-          video.addEventListener("error", function (e) {
-            console.error("Error occurred:", e);
-          });
-        } else {
-          console.error("WebM format is not supported in this browser.");
-        }
-      }
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    h1 {
+      margin-top: 50px;
+      margin-bottom: 50px;
+      text-align: center;
+    }
 
-      step1GenerateKey();
-    </script>
+    h4 {
+      margin-bottom: 20px;
+    }
 
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      h1 {
-        margin-top: 50px;
-        margin-bottom: 50px;
-        text-align: center;
-      }
+    .full-width-component {
+      width: 200%;
+      background-color: #f8f9fa;
+      box-sizing: border-box;
+      align-items: center;
+      margin-left: -50%;
+    }
 
-      h4 {
-        margin-bottom: 20px;
-      }
+    .sketch-component {
+      height: 100%;
+      box-sizing: border-box;
+      align-items: center;
+    }
 
-      .full-width-component {
-        width: 200%;
-        background-color: #f8f9fa;
-        box-sizing: border-box;
-        align-items: center;
-        margin-left: -50%;
-      }
+    .component {
+      border: 1px solid #ccc;
+      padding: 20px;
+      text-align: center;
+      align-items: center;
+      margin: 10px 0;
+    }
 
-      .sketch-component {
-        height: 100%;
-        box-sizing: border-box;
-        align-items: center;
-      }
+    .flex-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+    }
 
-      .component {
-        border: 1px solid #ccc;
-        padding: 20px;
-        text-align: center;
-        align-items: center;
-        margin: 10px 0;
-      }
+    .flex-item {
+      flex: 1;
+    }
 
-      .flex-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
-      }
+    #elevator {
+      width: 1000px;
+      align-items: center;
+    }
 
-      .flex-item {
-        flex: 1;
-      }
+    video {
+      display: block;
+      margin: 0 auto;
+    }
 
-      #elevator {
-        width: 1000px;
-        align-items: center;
-      }
+    .chart-container {
+      display: inline-block;
+      width: 45%; /* Adjust the width as needed */
+      margin-right: 10px; /* Adjust the margin as needed */
+    }
+  </style>
+</head>
 
-      video {
-        display: block;
-        margin: 0 auto;
-      }
+<body>
+  <div class="container">
+    <h2 class="mt-5 mb-3">Elevator System Management</h2>
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#videos">Input Videos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#simulation">Elevator Simulator</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#analytics">Data Visualisation</a>
+      </li>
+    </ul>
 
-      html {
-        height: 100%;
-      }
-
-      body {
-        margin: 0;
-      }
-
-      .bg {
-        animation: slide 3s ease-in-out infinite alternate;
-        background-image: linear-gradient(
-          -60deg,
-          rgb(57, 0, 104) 50%,
-          rgb(62, 0, 179) 50%
-        );
-        bottom: 0;
-        left: -50%;
-        opacity: 0.5;
-        position: fixed;
-        right: -50%;
-        top: 0;
-        z-index: -1;
-      }
-
-      .bg2 {
-        animation-direction: alternate-reverse;
-        animation-duration: 4s;
-      }
-
-      .bg3 {
-        animation-duration: 5s;
-      }
-
-      .content {
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 0.25em;
-        box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.25);
-        box-sizing: border-box;
-        left: 50%;
-        padding: 10vmin;
-        position: fixed;
-        text-align: center;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      h1 {
-        font-family: monospace;
-      }
-
-      @keyframes slide {
-        0% {
-          transform: translateX(-25%);
-        }
-        100% {
-          transform: translateX(25%);
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="bg"></div>
-    <div class="bg bg2"></div>
-    <div class="bg bg3"></div>
-
-    <div class="content">
-      <h2>Elevator System Management</h2>
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#videos"
-            >Input Videos</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#simulation"
-            >Elevator Simulator</a
-          >
-        </li>
-      </ul>
-
-      <div class="tab-content">
-        <div id="videos" class="container tab-pane active">
-          <br />
-          <h3>Home</h3>
-          <div class="container mt-5">
-            <div class="row">
-              <div class="col-md-12 mb-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Ground floor | Video feed</h5>
-                    <video id="video1"></video>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Elevator 1 | Video Feed</h5>
-                    <video id="video2"></video>
-                  </div>
+    <div class="tab-content">
+      <div id="videos" class="container tab-pane active">
+        <br />
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Ground floor | Video feed</h5>
+                  <video id="video1"></video>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div id="simulation" class="container tab-pane fade">
-          <br />
-          <div class="container-fluid full-width-component">
-            <div class="row">
-              <div class="col-3">
-                <div class="component">
-                  <h4>Elevator Configurations</h4>
-                  <table class="table table-striped">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <label for="waiting" class="label">Waiting</label>
-                        </td>
-                        <td id="waiting" class="hud-text"></td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="riding" class="label">Riding</label>
-                        </td>
-                        <td id="riding" class="hud-text"></td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="served" class="label">Served</label>
-                        </td>
-                        <td id="served" class="hud-text"></td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="numActiveCars" class="label"
-                            >Active Cars</label
-                          >
-                        </td>
-                        <td>
-                          <input
-                            id="numActiveCars"
-                            type="range"
-                            min="0"
-                            max="8"
-                            step="1"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="elevSpeed" class="label">Car Speed</label>
-                        </td>
-                        <td>
-                          <input
-                            id="elevSpeed"
-                            type="range"
-                            min="1"
-                            max="10"
-                            step="1"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="projection" class="label"
-                            >Projection</label
-                          >
-                        </td>
-                        <td id="projectionParent"></td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="controlMode" class="label"
-                            >Control Mode</label
-                          >
-                        </td>
-                        <td id="controlModeParent"></td>
-                      </tr>
-                      <tr>
-                        <td><label for="view" class="label">View</label></td>
-                        <td id="viewParent"></td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="passengerLoad" class="label">Load</label>
-                        </td>
-                        <td id="passengerLoadParent"></td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="volume" class="label">Volume</label>
-                        </td>
-                        <td>
-                          <input
-                            id="volume"
-                            type="range"
-                            min="0"
-                            max="10"
-                            step="1"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <label for="speakers" class="label">Speakers</label>
-                        </td>
-                        <td id="speakersParent"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="component">
-                  <h4>Elevator</h4>
-                  <div id="elevator"></div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="component">
-                  <h4>Events</h4>
-                  <div id="event"></div>
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Elevator 1 | Video Feed</h5>
+                  <video id="video2"></video>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div id="simulation" class="container tab-pane fade">
+        <br />
+        <div class="container-fluid full-width-component">
+          <div class="row">
+            <div class="col-3">
+              <div class="component">
+                <h4>Elevator Configurations</h4>
+                <table class="table table-striped">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label for="waiting" class="label">Waiting</label>
+                      </td>
+                      <td id="waiting" class="hud-text"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="riding" class="label">Riding</label>
+                      </td>
+                      <td id="riding" class="hud-text"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="served" class="label">Served</label>
+                      </td>
+                      <td id="served" class="hud-text"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="numActiveCars" class="label">Active Cars</label>
+                      </td>
+                      <td>
+                        <input id="numActiveCars" type="range" min="0" max="8" step="1" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="elevSpeed" class="label">Car Speed</label>
+                      </td>
+                      <td>
+                        <input id="elevSpeed" type="range" min="1" max="10" step="1" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="projection" class="label">Projection</label>
+                      </td>
+                      <td id="projectionParent"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="controlMode" class="label">Control Mode</label>
+                      </td>
+                      <td id="controlModeParent"></td>
+                    </tr>
+                    <tr>
+                      <td><label for="view" class="label">View</label></td>
+                      <td id="viewParent"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="passengerLoad" class="label">Load</label>
+                      </td>
+                      <td id="passengerLoadParent"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="volume" class="label">Volume</label>
+                      </td>
+                      <td>
+                        <input id="volume" type="range" min="0" max="10" step="1" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="speakers" class="label">Speakers</label>
+                      </td>
+                      <td id="speakersParent"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="component">
+                <h4>Elevator</h4>
+                <div id="elevator"></div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="component">
+                <h4>Events</h4>
+                <div id="event"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="analytics" class="container tab-pane fade">
+        <br />
+        <div class="chart-container mt-5 m-2">
+          <h4>Frequently <b><u>Visited</u></b> Floors</h4>
+          <canvas id="pieChartDestFloor" width="300" height="300"></canvas>
+        </div>
+        <div class="chart-container mt-5 m-2">
+          <h4>Most frequent <b><u>Source</u></b> Floors</h4>
+          <canvas id="pieChartSrcFloor" width="300" height="300"></canvas>
+        </div>
+        <div class="chart-container mt-5 m-2">
+          <h4>Elevator Usage by <b><u>Day Of Week</u></b></h4>
+          <canvas id="barChartDay" width="300" height="300"></canvas>
+        </div>
+        <div class="chart-container mt-5 m-2">
+          <h4>Elevator Usage by <b><u>Hour of Day</u></b></h4>
+          <canvas id="barChartHour" width="300" height="300"></canvas>
+        </div>
+      </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
