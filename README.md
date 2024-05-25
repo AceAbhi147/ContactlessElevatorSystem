@@ -2,7 +2,7 @@
 
 This project simulates an elevator system leveraging the features of Nx Systems to provide a more efficient and enhanced solution. The system includes user authentication, streaming data from cameras on each floor and in each elevator car, and gesture control using custom ML models available in the NX system to request elevators.
 
-
+<br>
 ## Features
 
 1. **User Authentication**: Ensures secure access to the elevator system.
@@ -10,7 +10,7 @@ This project simulates an elevator system leveraging the features of Nx Systems 
 3. **Gesture Control**: Uses custom machine learning models to enable gesture-based elevator requests.
 4. **Analytics using Nx-Postprocessor**: Show data such as most visited floor etc for analytics purpose.
 
-
+<br>
 ## Tech Stack
 
 The project utilizes the following technologies to build and communicate with the elevator system:
@@ -24,9 +24,10 @@ The project utilizes the following technologies to build and communicate with th
 
 
 
-<br><br>
+<br><br><br>
 # Getting started:
 
+<br>
 ## Streaming a sample video
 The files required for this are present in **resources** folder. Just cd into that and run the 2nd and 3rd commands
 
@@ -42,9 +43,11 @@ The files required for this are present in **resources** folder. Just cd into th
     3. Use ffmpeg to stream a video file (looping forever) to the server:
     ffmpeg -re -stream_loop -1 -i file_name_with_path -c copy -f rtsp rtsp://localhost:8554/debug
 
+<br>
 ## Setup Nx Client and Mediaserver
 Follow this link: [Setting up Nx system](https://nx.docs.scailable.net/miscellaneous/hackathon-nx-evos-building-enterprise-scale-video-applications)
 
+<br>
 ## Instructions to run
 1. Make sure Nx mediaserver and client are installed with NX AI Plugin enabled
 2. Ensure rules created on stream to hit /events/request API with source and destination floor. See the curl below.
@@ -53,9 +56,10 @@ Follow this link: [Setting up Nx system](https://nx.docs.scailable.net/miscellan
 5. Navigate to localhost:5000/login and start from there.
 
 
-<br><br>
+<br><br><br>
 # System Details
 
+<br>
 ## Gestures Model Details (NX AI Model ID: d05cc436-d74d-455f-b9ed-587fc4543a60)
 Used tensorflow & Google's mediapipe to create a hand gesture recongnition model. A demo for which is attached below.
 https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/03f5940d-fc25-48dd-ba07-79bc3c6af08e
@@ -66,6 +70,7 @@ at first glance it looked like, only RGB based models are supported.
 Since NX didn't support this, I have integrated my own solution for **Contactless Elevator** and hope in future, the model can
 be added to NX AI Cloud.
 
+<br>
 ## Nx-Postprocessor
 This system uses Nx postprocessor that creates a csv file that will be used for analytical purposes like 
 checking the most frequently visited floor or the source floor from where the passenger boards.
@@ -75,6 +80,7 @@ The compiled file is present in **resources** folder and the source file itself 
 
 [Configure postprocessor](https://github.com/scailable/sclbl-integration-sdk#)
 
+<br>
 ## Deployment
 The project is available as a Docker image on Docker Hub:
 
@@ -84,7 +90,7 @@ You can also access the deployed project on Render:
 
 [Contactless Elevator System](https://contactless-elevator.onrender.com/login) ⚠️Waring⚠️ --> Not updated
 
-
+<br>
 ## How It Works
 
 - **Node.js**: Uses Express.js to provide API routes.
@@ -93,7 +99,7 @@ You can also access the deployed project on Render:
 - **Nx System**: Events triggers the elevators based on model detection
 
 
-<br><br>
+<br><br><br>
 # UI & Demo
 
 ## UI pages
@@ -137,7 +143,9 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 ## Demo using curl commands
 [Demo using curl](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/dfb56f83-6a35-4013-826a-96d331bdef23)
 
-<br><br>
+
+
+<br><br><br>
 # Known Issues
 
 1. **Authentication APIs**: The authentication APIs are not functioning correctly, resulting in the "Inputs Video" tab being non-functional.
