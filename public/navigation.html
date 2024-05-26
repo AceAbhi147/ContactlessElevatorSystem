@@ -190,6 +190,9 @@
         text-align: center;
         top: 50%;
         transform: translate(-50%, -50%);
+        overflow-y: auto; /* Vertical scrolling */
+        max-height: 100vh; /* Set maximum height to viewport height */
+        width: 2300px; /* Set maximum width to 2500px */
       }
 
       h1 {
@@ -234,7 +237,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Ground floor | Video feed</h5>
-                  <video id="video1"></video>
+                  <video id="video1" autoplay="true" muted="muted"></video>
                 </div>
               </div>
             </div>
@@ -242,7 +245,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Elevator 1 | Video Feed</h5>
-                  <video id="video2"></video>
+                  <video id="video2" autoplay="true" muted="muted"></video>
                 </div>
               </div>
             </div>
