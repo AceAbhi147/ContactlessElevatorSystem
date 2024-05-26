@@ -105,18 +105,22 @@ You can also access the deployed project on Render:
 ## UI pages
 Login Page
 ![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/fae2c2f0-6d6d-45b5-9ce1-feb5dba416a5)
-
+<br>
 Authentication using Nx
 ![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/b32d9a53-ceb1-4887-a1c4-89a659b0b857)
-
+<br>
 System details
 ![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/5702f0e5-9b11-4e4c-ad81-86f680e2ec14)
-
+<br>
 Video Streaming from Nx client using API
 ![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/0f467336-5987-491f-a5cf-93cc74206cf6)
-
+<br>
 Contactless elevator system
 ![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/17676c73-5f4d-4b69-9b4d-f168e582ba1c)
+<br>
+Data Visualisation
+![Image](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/2d14da9d-ec94-4878-b057-bd351f6f5f01)
+
 
 
 ## Curl for request to the Elevator with source and destination floor numbers
@@ -138,8 +142,11 @@ curl --location 'http://localhost:5000/events/request' --header 'Content-Type: a
 ```
 
 ## Demo with NX AI Integration
+[Final Demo](https://www.youtube.com/watch?v=ipZG6jTBdSY&ab_channel=Abhisheksingh)
+<br>
 [Demo with Nx AI Integration](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/49f56f9d-b5d4-4839-9256-fa13e9adc586)
 
+<br>
 ## Demo using curl commands
 [Demo using curl](https://github.com/AceAbhi147/ContactlessElevatorSystem/assets/22478260/dfb56f83-6a35-4013-826a-96d331bdef23)
 
